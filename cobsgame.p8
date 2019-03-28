@@ -46,7 +46,7 @@ function _draw()
 
 	rectfill(0,0,127,127,1)
 	
-	spr(pwt%20<10 and 1 or 2,
+	spr(pwt%18<9 and 1 or 2,
 		px-3,py-7,1,1,band(ps,2)==0)
 	
 end
