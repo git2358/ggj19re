@@ -3,7 +3,53 @@ version 16
 __lua__
 -- jacob cazabon 2019
 
+local t,f=true,false
+local px,py,ps,pwt
 
+function _init()
+	
+	reload()
+	
+	-- player
+	px,py=0,0
+	ps=0b01
+	pwt=0
+	
+end
+
+function _update()
+
+	local wsh=btn(0)==btn(1)
+	local wsv=btn(2)==btn(3)
+	if band(ps,1) then
+		pwt+=1
+		if not wsh then
+			if btn(0) then
+				px-=1
+				ps=bor(ps,2)
+			end
+			if btn(1) then
+			 px+=1
+			 ps=band(ps,bnot(2))
+			end
+ 	end
+ 	if not wsv then
+ 		if (btn(2)) py-=1
+ 		if (btn(3)) py+=1
+ 	end
+	end
+	if (wsh and wsv) pwt=0
+
+end
+
+function _draw()
+
+	rectfill(0,0,127,127,1)
+	
+	spr(pwt%20<10 and 1 or 2,
+		px-3,py-7,1,1,band(ps,2)==0)
+	
+end
 __gfx__
 00000000054445500000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000
 000000005444445c0544455000000000000000000000000000000000000000000000000000000000000000000008980008088000000000000080000000000000
