@@ -23,7 +23,7 @@ end
 
 function _update()
 
-	-- player
+	-- player movement
 	local px0,py0=px,py
 	local wsh=btn(0)==btn(1)
 	local wsv=btn(2)==btn(3)
@@ -87,21 +87,54 @@ function _update()
 	end
 	
 	-- half collision
-	local fn,f0,f1,f2
-	fn=0
-	f0=fget(mget(ptx,pty),0)
-	f1=fget(mget(ptx,pty),1)
-	f2=fget(mget(ptx,pty),2)
-	if (f0) fn+=4
-	if (f1) fn+=2
-	if (f2) fn+=1
+	local t=mget(ptx,pty)
+	local fn=0
+	if (fget(t,0)) fn+=4
+	if (fget(t,1)) fn+=2
+	if (fget(t,2)) fn+=1
 	if (fn==1) px=min(px,ptx*8+3)
 	if (fn==2) px=max(px,ptx*8+5)
 	if (fn==5) py=min(py,pty*8+3)
 	if (fn==6) py=max(py,pty*8+5)
 	
 	-- bridges
-	
+	f0=fget(t,0)
+	f1=fget(t,1)
+	f2=fget(t,2)
+	if btn(4) and f1!=f2 then
+		if fn==1 then
+			mset(ptx,pty,t-16)
+			if mget(ptx+1,pty)==t-32 then
+				mset(ptx+1,pty,t-16)
+			else
+				mset(ptx+1,pty,t)
+			end
+		end
+		if fn==2 then
+			mset(ptx,pty,t+16)
+			if mget(ptx-1,pty)==t+32 then
+				mset(ptx-1,pty,t+16)
+			else
+				mset(ptx-1,pty,t)
+			end
+		end
+		if fn==5 then
+			mset(ptx,pty,t-16)
+			if mget(ptx,pty+1)==t-32 then
+				mset(ptx,pty+1,t-16)
+			else
+				mset(ptx,pty+1,t)
+			end
+		end
+		if fn==6 then
+			mset(ptx,pty,t+16)
+			if mget(ptx,pty-1)==t+32 then
+				mset(ptx,pty-1,t+16)
+			else
+				mset(ptx,pty-1,t)
+			end
+		end
+	end
 	
 	-- camera
 	if (band(ps,1)) ctx,cty=px,py
