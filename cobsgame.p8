@@ -11,7 +11,7 @@ function _init()
 	reload()
 	
 	-- player
-	px,py=0,0
+	px,py=64,63
 	ps=0b01
 	pwt=0
 	
@@ -19,6 +19,7 @@ end
 
 function _update()
 
+	-- control player
 	local wsh=btn(0)==btn(1)
 	local wsv=btn(2)==btn(3)
 	if band(ps,1) then
@@ -46,8 +47,12 @@ function _draw()
 
 	rectfill(0,0,127,127,1)
 	
+	-- player
+	local pxo
+	pxo=band(ps,2)==0 and 4 or 3
 	spr(pwt%18<9 and 1 or 2,
-		px-3,py-7,1,1,band(ps,2)==0)
+		px-pxo,py-7,1,1,band(ps,2)==0)
+	pset(px,py,11)
 	
 end
 __gfx__
