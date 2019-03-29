@@ -15,11 +15,15 @@ function _init()
 	ps=0b01
 	pwt=0
 	
+	-- camera
+	ctx,cty=px,py
+	cx,cy=ctx-64,cty-64
+	
 end
 
 function _update()
 
-	-- control player
+	-- player
 	local wsh=btn(0)==btn(1)
 	local wsv=btn(2)==btn(3)
 	if band(ps,1) then
@@ -40,6 +44,15 @@ function _update()
  	end
 	end
 	if (wsh and wsv) pwt=0
+	
+	-- camera
+	if band(ps,1) then
+		ctx,cty=px,py
+	end
+	cx+=flr((ctx-cx-64)/2+0.5)
+	cy+=flr((cty-cy-64)/2+0.5)
+	if (ctx-cx==63) cx=ctx-64
+	if (cty-cy==63) cy=cty-64
 
 end
 
@@ -47,12 +60,17 @@ function _draw()
 
 	rectfill(0,0,127,127,1)
 	
+	-- map
+	local mtx,mty,mx,my
+	mtx=flr(cx/8)-1
+	mty=flr(cy/8)-1
+	
 	-- player
 	local pxo
 	pxo=band(ps,2)==0 and 4 or 3
 	spr(pwt%18<9 and 1 or 2,
-		px-pxo,py-7,1,1,band(ps,2)==0)
-	pset(px,py,11)
+		px-pxo-cx,py-cy-7,1,1,
+		band(ps,2)==0)
 	
 end
 __gfx__
