@@ -34,7 +34,7 @@ function _update()
 	local px0,py0=px,py
 	local wsh=btn(0)==btn(1)
 	local wsv=btn(2)==btn(3)
-	if band(ps,1) then
+	if band(ps,1)>0 then
 		pwt+=1
 		if not wsh then
 			if btn(0) then
