@@ -4,10 +4,10 @@ __lua__
 -- jacob cazabon 2019
 
 local t,f=true,false
-local gs
+local gs,gt
 local px,py,ps,pw,pl,pwt,pct
 local cx,cy,ctx,cty
-local fx,fy,fr1,fr2,ft
+local fx,fy,fr1,fr2,ft,fl
 local hud,pdw
 
 function _init()
@@ -15,17 +15,17 @@ function _init()
 	reload()
 	
 	-- game
-	gs=1
+	gs,gt=0,0
 	
 	-- player
 	px,py=516,26
-	ps=0b011
+	ps=0b010
 	pl,pw=100,0
 	pwt,pct=0,0
 	
 	-- campfire
 	fx,fy=516,28
-	ft=1680
+	fl,ft=1680,0
 	fr1,fr2=24,84
 	
 	-- camera
@@ -182,10 +182,13 @@ function _update()
 	
 	-- campfires
 	if fx!=nil and fy!=nil then
-		ft-=1
-		if (ft<0) fx,fy=nil,nil
-		fr1=-0.04*(1680-ft)+24
-		fr2=-0.05*(1680-ft)+84
+		ft+=1
+		if band(ps,1)>0 then
+ 		fl-=1
+ 		if (fl<0) fx,fy=nil,nil
+ 		fr1=-0.04*(1680-fl)+24
+ 		fr2=-0.05*(1680-fl)+84
+ 	end
 	end
 	if btn(4) and band(ps,1)>0 and
 		not fget(mget(ptx,pty),4)
@@ -198,7 +201,7 @@ function _update()
  	end
  	if ok and pw>=3 then
   	fx,fy=px,py
-  	ft=1680
+  	fl,ft=1680,0
   	fr1,fr2=24,84
   	pw-=3
   end
@@ -222,19 +225,26 @@ function _update()
 	pct=max(pct-1,0)
 	
 	-- camera
-	if band(ps,4)>0 then
+	if gs==0 or gs==1 then
+		ctx,cty=fx,fy
+		cx,cy=ctx-64,cty-64
+	end
+	if band(ps,4)>0 and gs==2 then
 		ctx,cty=px,py
 	end
 	cx+=flr((ctx-cx-64)/2+0.5)
 	cy+=flr((cty-cy-64)/2+0.5)
 	if (ctx-cx==63) cx=ctx-64
 	if (cty-cy==63) cy=cty-64
+	
+	-- game state
+	gt+=1
 
 end
 
 function frdr()
 	local fs=ft%20<10 and 12 or 11
-	if ft<1080 then
+	if fl<1080 then
 		fs=ft%40<20 and 14 or 13
 	end
 	spr(fs,fx-cx-4,fy-cy-4)
@@ -301,6 +311,9 @@ function _draw()
  	m="-"..abs(d)
  	print(m,8+pwx,129-hud,8)
  end
+ 
+ print(gs,1,1,14)
+ print(gt,5,1,12)
 	
 end
 __gfx__
